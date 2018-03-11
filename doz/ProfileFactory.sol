@@ -6,8 +6,6 @@ contract ProfileFactory is ERC721Token, Ownable {
     string public name = "D-OZ Profile";
     string public constant SYMBOL = "DOZ";
 
-    address public controller;
-    uint256 public price;
     uint48 private profileId = 1;
     // profile IDs start at 1, just like arrays do :)
 
@@ -34,9 +32,6 @@ contract ProfileFactory is ERC721Token, Ownable {
 
     mapping(string => bool) public nameRegistered;
     mapping(string => bool) public handleRegistered;
-
-    event ProfileMade(string _name, string _handle, uint48 _profileId);
-    event ProfileDeleted(uint48 _profileId);
 
     function createProfile(string _name, string _handle) internal returns(uint48) {
 
