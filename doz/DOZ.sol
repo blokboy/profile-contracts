@@ -1,6 +1,6 @@
 pragma solidity ^0.4.19;
 
-contract DOZ is FollowFunctions, MetaFunctions, StringFunctions, Verified {
+contract DOZ is DOZView, FollowFunctions, MetaFunctions, StringFunctions, Verified {
 
     address public controller;
     uint256 public profilePrice;
