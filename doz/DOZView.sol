@@ -1,45 +1,47 @@
 pragma solidity ^0.4.19;
 
+import "./ProfileFactory.sol";
+
 
 contract DOZView is ProfileFactory {
 
-    function getProfileName(uint48 _profileId) public view returns(string) {
+    function getProfileName(uint256 _profileId) public view returns(string) {
         return profiles[_profileId].name;
     }
 
-    function getProfileHandle(uint48 _profileId) public view returns(string) {
+    function getProfileHandle(uint256 _profileId) public view returns(string) {
         return profiles[_profileId].handle;
     }
 
-    function getProfileBio(uint48 _profileId) public view returns(string) {
+    function getProfileBio(uint256 _profileId) public view returns(string) {
         return profiles[_profileId].bio;
     }
 
-    function getProfileMetadata(uint48 _profileId, string _metaKey, string _namespace) public view returns(string) {
-        return profiles[_profileId].metadata[_namespace + ":" + _metaKey];
+    function getProfileMetadata(uint256 _profileId, string _metaKey, string _space) public view returns(string) {
+        return metadata[_profileId][_space][_metaKey];
     }
 
-    function getProfileFollowerCount(uint48 _profileId) public view returns(uint32) {
+    function getProfileFollowerCount(uint256 _profileId) public view returns(uint256) {
         return profiles[_profileId].followerCount;
     }
 
-    function getProfileFollowingCount(uint48 _profileId) public view returns(uint32) {
+    function getProfileFollowingCount(uint256 _profileId) public view returns(uint256) {
         return profiles[_profileId].followingCount;
     }
 
-    function followsProfile(uint48 _profileId, uint48 _followerId) public view returns(bool) {
-        return profiles[_profileId].followsU[_followerId];
+    function followsProfile(uint256 _profileId, uint256 _followerId) public view returns(bool) {
+        return followsU[_profileId][_followerId];
     }
 
-    function profileFollows(uint48 _profileId, uint48 _followingId) public view returns(bool) {
-        return profiles[_profileId].uFollow[_followingId];
+    function profileFollows(uint256 _profileId, uint256 _followingId) public view returns(bool) {
+        return uFollow[_profileId][_followingId];
     }
 
-    function getVerifiedStatus(uint48 _profileId, string _tier) public view returns(bool) {
-        return profiles[_profileId].verifiedStatus[_tier];
+    function getVerifiedStatus(uint256 _profileId, uint256 _tier) public view returns(bool) {
+        return verifiedStatus[_profileId][_tier];
     }
 
-    function getProfileDateCreated(uint48 _profileId) public view returns(uint64) {
+    function getProfileDateCreated(uint256 _profileId) public view returns(uint64) {
         return profiles[_profileId].dateCreated;
     }
 }
