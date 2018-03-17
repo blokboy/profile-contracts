@@ -8,7 +8,7 @@ import "../../math/SafeMath.sol";
  * Generic implementation for the required functionality of the ERC721 standard
  */
 
- contract ERC721Token is ERC721 {
+contract ERC721Token is ERC721 {
     using SafeMath for uint256;
 
      // Total amount of tokens

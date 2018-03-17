@@ -37,8 +37,8 @@ contract DOZView is ProfileFactory {
         return uFollow[_profileId][_followingId];
     }
 
-    function getVerifiedStatus(uint256 _profileId, uint256 _tier) public view returns(bool) {
-        return verifiedStatus[_profileId][_tier];
+    function getVerifiedStatus(uint256 _profileId) public view returns(uint8) {
+        return verifiedStatus[_profileId];
     }
 
     function getProfileDateCreated(uint256 _profileId) public view returns(uint64) {

@@ -1,10 +1,9 @@
 pragma solidity ^0.4.19;
 
 import "./ERC721Token.sol";
-import "./Ownable.sol";
 
 
-contract ProfileFactory is ERC721Token, Ownable {
+contract ProfileFactory is ERC721Token {
     using SafeMath for uint256;
 
     string public name = "D-OZ Profile";
@@ -27,7 +26,7 @@ contract ProfileFactory is ERC721Token, Ownable {
     // verifiedStatus[profileId][tierId] = true/false
     // checks if your profileId is verified at a certain tier
     // 0 = not verified, 1 = regular verification, 2 = V.I.P.
-    mapping (uint256 => mapping (uint256 => bool)) verifiedStatus;
+    mapping (uint256 => uint8) verifiedStatus;
 
     // set a price for a particular tier
     mapping (uint256 => uint256) tierToPrice;
@@ -48,8 +47,6 @@ contract ProfileFactory is ERC721Token, Ownable {
 
     mapping(uint256 => bool) profileExists;
     mapping(string => uint256) handleToProfileId; // Ties a profile's name to it's ID
-
-    mapping(string => bool) nameRegistered;
     mapping(string => bool) handleRegistered;
 
     function _createProfile(string _name, string _handle, string _bio) internal returns(uint256) {
@@ -65,10 +62,9 @@ contract ProfileFactory is ERC721Token, Ownable {
 
         profiles[profileId] = profile;
         profileExists[profileId] = true;
-        nameRegistered[_name] = true;
         handleRegistered[_handle] = true;
         handleToProfileId[_handle] = profileId;
-        verifiedStatus[profileId][0] = true;
+        verifiedStatus[profileId] = 0;
 
         _mint(msg.sender, profileId);
 
@@ -78,13 +74,13 @@ contract ProfileFactory is ERC721Token, Ownable {
         return currentProfileId;
     }
 
-    function _deleteProfile(string _name, string _handle, uint256 _profileId) internal {
+    function _deleteProfile(string _handle, uint256 _profileId) internal {
 
         delete profiles[_profileId]; // deletes all the properties in the struct
-        profileExists[_profileId] = false;
-        nameRegistered[_name] = false;
-        handleRegistered[_handle] = false;
-        handleToProfileId[_handle] = 0; // If a profile ID is 0 that means it does not exist
+        delete profileExists[_profileId];
+        delete handleRegistered[_handle];
+        delete handleToProfileId[_handle];
+        delete verifiedStatus[_profileId];
 
         _burn(_profileId);
     }
