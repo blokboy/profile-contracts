@@ -6,12 +6,11 @@ contract DOZ is Ownable, View, Follow, String, Meta, Rank {
     /* MISSING
     Ranking has been built in, but I'm still missing verification and reputation
     I make it so that anybody can rankUp a profile but then there's no incentive for Dapps to push for rankUp
+    Following and unfollowing is still expensive, I need to track who follows who and somehow reduce storage
     */
 
     // the price of a Profile
     uint256 public price;
-    // the cut that verifiers receive
-    uint256 public cut;
 
     event ProfileCreated(string _handle, uint256 _id);
     event ProfileDeleted(string _handle, uint256 _id);
@@ -59,13 +58,13 @@ contract DOZ is Ownable, View, Follow, String, Meta, Rank {
 
     // FOLLOW FUNCTIONS
     // Follow functions must check if profiles exist in the first place
-    function follow(uint256 _initiatorId, uint256 _targetId) public onlyOwnerOf(_initiatorId) mustExist(_initiatorId) mustExist(_targetId) {
+    function follow(uint256 _initiatorId, uint256 _targetId) public onlyOwnerOf(_initiatorId) mustExist(_initiatorId) mustExist(_targetId) mustNotFollow( _initiatorId, _targetId) {
         require(_initiatorId != _targetId); // make sure we're not following ourselves
         _follow(_initiatorId, _targetId);
         NewFollow(_initiatorId, _targetId);
     }
 
-    function unfollow(uint256 _initiatorId, uint256 _targetId) public onlyOwnerOf(_initiatorId) mustExist(_initiatorId) mustExist(_targetId) {
+    function unfollow(uint256 _initiatorId, uint256 _targetId) public onlyOwnerOf(_initiatorId) mustExist(_initiatorId) mustExist(_targetId) mustFollow(_initiatorId, _targetId) {
         require(_initiatorId != _targetId); // make sure we're not unfollowing ourselves
         _unfollow(_initiatorId, _targetId);
         NewUnfollow(_initiatorId, _targetId);
@@ -102,10 +101,6 @@ contract DOZ is Ownable, View, Follow, String, Meta, Rank {
 
     function changePrice(uint256 _newPrice) public onlyOwner {
         price = _newPrice;
-    }
-
-    function setCut(uint256 _newCut) public onlyOwner {
-        cut = _newCut;
     }
 
     // Withdraw the funds of the account from fees received by charging for profiles

@@ -16,8 +16,6 @@ contract ProfileBase is ERC721Token {
 
     struct Profile {
         bytes32 handle;
-        uint256 followers;
-        uint256 followings;
         uint256 rank; // verified status
     }
 
@@ -28,8 +26,6 @@ contract ProfileBase is ERC721Token {
         handleToId[keccak256(_handle)] = id;
         Profile memory profile = Profile({
             handle: keccak256(_handle),
-            followerCount: 0,
-            followingCount: 0,
             rank: 0
         });
         profiles[id] = profile;

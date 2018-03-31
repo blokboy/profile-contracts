@@ -1,7 +1,7 @@
 pragma solidity ^0.4.19;
 
 
-contract View is ProfileBase {
+contract View is ProfileBase, Follow, String, Rank {
 
 
     function getProfileHandle(uint256 _id) public view returns(string) {
@@ -9,14 +9,14 @@ contract View is ProfileBase {
         return profiles[_id].handle;
     }
 
-    function getProfileFollowerCount(uint256 _id) public view returns(uint256) {
-        require(exists(_id));
-        return profiles[_id].followers;
+    function doesFollow(uint256 _initiatorId, uint256 _targetId) public view returns(uint256) {
+        require(exists(_initiatorId) && exists(_targetId));
+        return followStatus[keccak256(_initiatorId, _targetId, "follows")];
     }
 
-    function getProfileFollowingCount(uint256 _id) public view returns(uint256) {
-        require(exists(_id));
-        return profiles[_id].following;
+    function isFollowedBy(uint256 _initiatorId, uint256 _targetId) public view returns(uint256) {
+        require(exists(_initiatorId) && exists(_targetId));
+        return followStatus[keccak256(_initiatorId, _targetId, "followedBy")];
     }
 
     function getProfileRank(uint256 _id) public view returns(uint256) {
