@@ -20,12 +20,12 @@ contract ProfileBase is ERC721Token {
     }
 
     mapping (uint256 => Profile) internal profiles; // tracks profiles
-    mapping (bytes32 => uint256) internal handleToId; // Ties a Profile to it's ID
+    mapping (string => uint256) internal handleToId; // Ties a Profile to it's ID
 
     function _createProfile(string _handle) internal {
-        handleToId[keccak256(_handle)] = id;
+        handleToId[_handle] = id;
         Profile memory profile = Profile({
-            handle: keccak256(_handle),
+            handle: _handle,
             rank: 0
         });
         profiles[id] = profile;
@@ -34,7 +34,7 @@ contract ProfileBase is ERC721Token {
     }
 
     function _deleteProfile(uint256 _id, string _handle) internal {
-        delete handleToId[keccak256(_handle)];
+        delete handleToId[_handle];
         delete profiles[_id];
         _burn(msg.sender, _id);
     }

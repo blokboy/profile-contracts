@@ -12,18 +12,17 @@ contract DOZ is Ownable, View, Follow, String, Meta, Rank {
     // the price of a Profile
     uint256 public price;
 
-    event ProfileCreated(string _handle, uint256 _id);
-    event ProfileDeleted(string _handle, uint256 _id);
-    event HandleChange(uint256 _id, string _newHandle);
-    event NewFollow(uint256 _followingId, uint256 _followedId);
-    event NewUnfollow(uint256 _unfollowingId, uint256 _unfollowedId);
-    event NewRank(uint256 _rank, uint256 _id);
-    event RankTransfered(uint256 _rank, uint256 _initiatorId, uint256 _targetId);
-    event MetadataChanged(string _space, string _key, string _value, uint256 _id);
+    event ProfileCreated(string indexed _handle, uint256 indexed _id);
+    event ProfileDeleted(string indexed _handle, uint256 indexed _id);
+    event HandleChange(uint256 indexed _id, string indexed _newHandle);
+    event NewFollow(uint256 indexed _followingId, uint256 indexed _followedId);
+    event NewUnfollow(uint256 indexed _unfollowingId, uint256 indexed _unfollowedId);
+    event NewRank(uint256 indexed _rank, uint256 indexed _id);
+    event RankTransfered(uint256 indexed _rank, uint256 indexed _initiatorId, uint256 indexed _targetId);
+    event MetadataChanged(string indexed _key, string indexed _value, uint256 indexed _id);
 
-    function DOZ(uint256 _price, uint256 _cut) public {
+    function DOZ(uint256 _price) public {
         price = _price;
-        cut = _cut;
     }
 
     function createProfile(string _handle) public payable {
@@ -47,26 +46,24 @@ contract DOZ is Ownable, View, Follow, String, Meta, Rank {
     // STRING FUNCTIONS END
 
     // META FUNCTIONS
-    function editMetadata(string metaKey, string metaValue, string space, uint256 _id) public onlyOwnerOf(_id) mustExist(_id) {
-        MetadataChanged(space, metaKey, metaValue, _id);
+    function editMetadata(string metaKey, string metaValue, uint256 _id) public onlyOwnerOf(_id) mustExist(_id) {
+        MetadataChanged(metaKey, metaValue, _id);
     }
 
-    function removeMetadata(string metaKey, string space, uint256 _id) public onlyOwnerOf(_id) mustExist(_id) {
-        MetadataChanged(space, metaKey, "", _id);
+    function removeMetadata(string metaKey, uint256 _id) public onlyOwnerOf(_id) mustExist(_id) {
+        MetadataChanged(metaKey, "", _id);
     }
     // META FUNCTIONS END
 
     // FOLLOW FUNCTIONS
     // Follow functions must check if profiles exist in the first place
-    function follow(uint256 _initiatorId, uint256 _targetId) public onlyOwnerOf(_initiatorId) mustExist(_initiatorId) mustExist(_targetId) mustNotFollow( _initiatorId, _targetId) {
+    function follow(uint256 _initiatorId, uint256 _targetId) public onlyOwnerOf(_initiatorId) mustExist(_initiatorId) mustExist(_targetId) {
         require(_initiatorId != _targetId); // make sure we're not following ourselves
-        _follow(_initiatorId, _targetId);
         NewFollow(_initiatorId, _targetId);
     }
 
-    function unfollow(uint256 _initiatorId, uint256 _targetId) public onlyOwnerOf(_initiatorId) mustExist(_initiatorId) mustExist(_targetId) mustFollow(_initiatorId, _targetId) {
+    function unfollow(uint256 _initiatorId, uint256 _targetId) public onlyOwnerOf(_initiatorId) mustExist(_initiatorId) mustExist(_targetId) {
         require(_initiatorId != _targetId); // make sure we're not unfollowing ourselves
-        _unfollow(_initiatorId, _targetId);
         NewUnfollow(_initiatorId, _targetId);
     }
     // FOLLOW FUNCTIONS END

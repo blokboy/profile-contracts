@@ -1,7 +1,7 @@
 pragma solidity ^0.4.19;
 
 
-contract Follow is ProfileBase, View {
+contract Follow is ProfileBase {
 
     /**
     * followStatus stores a bytes32 hash of whether an id follows and ID or if it's followed by an ID
@@ -36,7 +36,7 @@ contract Follow is ProfileBase, View {
     }
 
     function _unfollow(uint256 _initiatorId, uint256 _targetId) internal {
-        delete followStatus[keccak256(_initiatorId, _targetId, "follows")];
-        delete followStatus[keccak256(_targetId, _initiatorId, "followedBy")];
+        followStatus[keccak256(_initiatorId, _targetId, "follows")] = false;
+        followStatus[keccak256(_targetId, _initiatorId, "followedBy")] = false;
     }
 }
